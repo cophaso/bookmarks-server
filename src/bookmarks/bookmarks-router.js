@@ -27,7 +27,7 @@ bookmarksRouter
 
     res
       .status(201)
-      .location(`http://localhost:8000/list/${id}`)
+      .location(`http://localhost:8000/bookmarks/${id}`)
       .json({id});
   })
   .delete((req, res) => {
