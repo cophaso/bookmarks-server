@@ -4,13 +4,14 @@ const logger = require('../logger');
 const { bookmarks } = require('../store');
 
 const bookmarksRouter = express.Router()
+const bodyParser = express.json()
 
 bookmarksRouter
   .route('/bookmarks')
   .get((req, res) => {
     res.json(bookmarks);
   })
-  .post((req, res) => {
+  .post(bodyParser, (req, res) => {
     const { title, url, description, rating } =req.body;
     const id = uuid();
     const bookmark ={
@@ -30,6 +31,20 @@ bookmarksRouter
       .location(`http://localhost:8000/bookmarks/${id}`)
       .json({id});
   })
+
+bookmarksRouter
+  .route('/bookmarks/:id')
+  .get((req, res) => {
+    const { id } = req.params;
+    const bookmark = bookmarks.find(bm => bm.id == id);
+
+    if (!bookmark) {
+      logger.error(`bookmark with id ${id} not found`);
+      return res.status(404).send('404 Not Found');
+    }
+
+    res.json(bookmark);
+  })
   .delete((req, res) => {
     const { id } = req.params;
 
@@ -48,20 +63,6 @@ bookmarksRouter
     res
       .status(204)
       .end();
-  })
-
-bookmarksRouter
-  .route('/bookmarks/:id')
-  .get((req, res) => {
-    const { id } = req.params;
-    const bookmark = bookmarks.find(bm => bm.id == id);
-
-    if (!bookmark) {
-      logger.error(`bookmark with id ${id} not found`);
-      return res.status(404).send('404 Not Found');
-    }
-
-    res.json(bookmark);
   })
 
   module.exports = bookmarksRouter;
