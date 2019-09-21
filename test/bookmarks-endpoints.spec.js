@@ -9,7 +9,7 @@ describe('Bookmarks Endpoints', function() {
   before('make knex instance', () => {
     db = knex({
       client: 'pg',
-      connection: process.env.TEST_DB_URL,
+      connection: 'postgresql://dunder-mifflin@localhost/bookmarks-test',
     })
     app.set('db', db)
   })
